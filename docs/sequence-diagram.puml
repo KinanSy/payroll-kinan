@@ -1,0 +1,37 @@
+@startuml
+' Visual Styling
+autonumber
+skinparam style strictuml
+
+' Define Participants
+actor "Client" as User
+participant "ProductController" as Controller
+participant "ProductService" as Service
+participant "ProductRepository" as Repo
+database "PostgreSQL" as DB
+
+' The GET Request Flow
+User -> Controller : GET /api/products/{id}
+activate Controller
+
+    Controller -> Service : getProductById(id)
+    activate Service
+
+        Service -> Repo : findById(id)
+        activate Repo
+
+            Repo -> DB : SQL Select
+            activate DB
+            DB --> Repo : Result Set
+            deactivate DB
+
+        Repo --> Service : ProductEntity
+        deactivate Repo
+
+    Service --> Controller : ProductDTO
+    deactivate Service
+
+Controller --> User : 200 OK (JSON)
+deactivate Controller
+
+@enduml
