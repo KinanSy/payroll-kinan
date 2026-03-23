@@ -1,6 +1,8 @@
 package ch.etml.es.payroll.entities;
 
 import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -74,5 +76,9 @@ public class Department {
                 this.getAcronym() + '\'' + ", description='" +
                 this.getDescription() + '\'' +
                 '}';
+    }
+
+    public List<Long> getEmployeeIds() {
+        return null;
     }
 }
