@@ -3,7 +3,6 @@ package ch.etml.es.payroll.controllers;
 import ch.etml.es.payroll.repositories.EmployeeRepository;
 import ch.etml.es.payroll.entities.Employee;
 import ch.etml.es.payroll.services.EmployeeService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -61,9 +60,9 @@ public class EmployeeController {
     }
 
     /* curl sample :
-        curl -i -X PUT localhost:8080/api/v1/employees/2 ^
-            -H "Content-type:application/json" ^
-            -d "{\"name\": \"Samwise Bing\", \"role\": \"peer-to-peer\"}"
+    curl -i -X PUT localhost:8080/api/v1/employees/2 ^
+        -H "Content-type:application/json" ^
+        -d "{\"name\": \"Samwise Bing\", \"role\": \"peer-to-peer\"}"
     */
     @PutMapping("/{id}")
     public ResponseEntity<Employee> upsertEmployee(
@@ -85,5 +84,20 @@ public class EmployeeController {
 
             return ResponseEntity.created(location).body(saved);
         }
+    }
+
+    /* curl sample :
+        curl -i -X DELETE localhost:8080/api/v1/employees/2
+        */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+
+        if (!repository.existsById(id)) {
+            throw new EmployeeNotFoundException(id);
+        }
+
+        repository.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
